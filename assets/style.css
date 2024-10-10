@@ -1,3 +1,8 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* font: */
+}
+
 .sidebar_style {
     position: fixed;
     top: 0;
@@ -5,20 +10,20 @@
     bottom: 0;
     width: 275px;
     padding: 5px 10px;
-    background-color: maroon;
+    background-color: #BC2434;
     color:white;
 
     flex-direction: column;
     align-items: flex-end;
 }
 
-.SIDEBAR_STYLE a {
+/* .SIDEBAR_STYLE a {
     color: white;
 }
 
 .SIDEBAR_STYLE a:hover {
     color: hotpink;
-}
+} */
 
 /*  general  */
 .standard_card {
@@ -71,10 +76,12 @@
     box-shadow: 0 1% 2% 0 lightgrey;
     transition: 0.3s;
     border-radius: 3px;
-    background-color: lightgoldenrodyellow;
+    background-color: #BC2434;
+    color: white;
     box-shadow: 0 8px 16px 0 lightgray;
 
     padding: 10px 20px;
+    margin: 0 0 20px 0;
     width:100%;
 }
 
@@ -125,6 +132,14 @@
 .histogram_flex_daddy {
     display: flex;
     flex-direction:column;
+}
+
+
+/* other components */
+
+#country_dropdown {
+    width: 200px;
+    color: black;
 }
 
 /* content positioning */
