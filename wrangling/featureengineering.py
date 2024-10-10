@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import dash_daq as daq
 
 michelin = pd.read_csv("https://raw.githubusercontent.com/ua-chjb/michelin_reviews/refs/heads/main/assets/data/michelin_cleaned.csv")
+michelin_og = michelin.copy()
 
 ################### A ###############
 
@@ -23,8 +25,7 @@ gb_3d = groupby_for_3d()
 
 
 ################### H ###############
-# call function for all these count variables
-
+# call function for all these count variables of bar_percentage chart
 onehot_cols = [ 
                "ac",	
                "wheelchair", 
@@ -40,8 +41,8 @@ onehot_cols = [
                "cashonly", 
                "sake"
               ]
-# define function for pivot
 
+# define function for pivot of bar_percentage chart
 def pivot_table_from_count(df, x, y):
 
     gb = michelin.groupby([x, y]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :3]
@@ -58,6 +59,7 @@ def pivot_table_from_count(df, x, y):
     
     return pivot.drop(["sum"], axis=1).drop("".join([y, str(0)]), axis=0)
     
+# combine data for of bar_percentage chart     
 onehot_barchart_dict = {}
 for onehot in onehot_cols:
     onehot_barchart_dict[onehot] = pivot_table_from_count(michelin, "Award", onehot)
@@ -65,11 +67,7 @@ for onehot in onehot_cols:
 onehot_big_df = pd.concat(onehot_barchart_dict.values())
 onehot_big_df = onehot_big_df.T[::-1].T
 
-#order cols
 onehot_big_df = onehot_big_df[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
-
-# add in average dataframe
-
 x = "Award"
 df = michelin
 
@@ -78,6 +76,7 @@ pivot = gb.set_index("Award").T
 
 pivot["sum"] = pivot.sum(axis=1)
 
+# turn to percentage of data
 for col in pivot.columns:
     for s in pivot.index:
         pivot.loc[s, col] = (pivot.loc[s, col] / pivot.loc[s, "sum"])
@@ -86,10 +85,13 @@ pivot = pivot.T.rename(columns={"count": "average"}).T
 
 pivot = pivot.drop(["sum"], axis=1)
 
-# order cols
 pivot = pivot[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
 
+# finalize full data in proper format, concatenated with "average" feature
 onehot_big_pivot = pd.concat([onehot_big_df, pivot])
 onehot_big_pivot = onehot_big_pivot.sort_values(by=["3 Stars"], ascending=True)
 
-onehot_big_pivot
+################### END ###############
+
+michelin = michelin
+michelin_og = michelin_og

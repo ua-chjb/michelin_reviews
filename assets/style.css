@@ -7,6 +7,9 @@
     padding: 5px 10px;
     background-color: maroon;
     color:white;
+
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .SIDEBAR_STYLE a {
@@ -48,11 +51,20 @@
 }
 
 
+/* heights */
+.height_full {
+    height: 600px;
+}
+
+.height_50p {
+    height: 285px;
+}
+
 /*  */
 .top_numbers_row {
     display: flex;
     justify-content:space-around;
-    padding: 0 0 1% 0;
+    padding: 0 0 20px 0;
 }
 
 .number {
@@ -84,17 +96,22 @@
 }
 
 
-/* heights */
-.height_full {
-    height: 600px;
-}
-
-
-.height_50p {
-    height: 285px;
-}
-
 /* flexes */
+
+.navbar_flex_baby {
+    padding: 0 0;
+}
+
+.space_between {
+    align-items: center;
+    padding-right:30px;
+    height: 40px;
+}
+
+.space_between p {
+    padding-right: 15px;
+}
+
 .threed_flex_baby {
     width:60px;
     flex-grow: 2.00;
@@ -109,6 +126,8 @@
     display: flex;
     flex-direction:column;
 }
+
+/* content positioning */
 
 .CONTENT_STYLE {
     position: relative;

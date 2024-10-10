@@ -11,8 +11,7 @@ import json
 
 from itertools import *
 
-from .featureengineering import michelin, gb_geo, onehot_big_pivot, gb_3d
-
+from .featureengineering import michelin, michelin_og, gb_geo, onehot_big_pivot, gb_3d
 
 # colors discrete
 
@@ -25,6 +24,11 @@ from .featureengineering import michelin, gb_geo, onehot_big_pivot, gb_3d
 #     [0.50, "#DBB583"], #tan
 #     [1.00, "#BC2434"], #red
 #     ]
+
+# # # # # # # # # copy for filter # # # # # # # # # # 
+# michelin = michelin_filtered
+# michelin_og = michelin_og
+
 
 #################### A ######################
 
@@ -114,7 +118,7 @@ fig_I = pie_final(count_groupby_one_dimensional(michelin, "amenities_sum"), "ame
 fig_K = pie_final(count_groupby_one_dimensional(michelin, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition="inside", title="sentiment bucket composition", legend_title="legend", colors=px.colors.sequential.Oryel)
 
 # M chart
-fig_M = pie_final(count_groupby_one_dimensional(michelin, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend", colors=px.colors.sequential.Oryel)
+fig_M = pie_final(count_groupby_one_dimensional(michelin_og, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend", colors=px.colors.sequential.Oryel)
 
 # N chart
 fig_N = pie_final(count_groupby_one_dimensional(michelin, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend", colors=px.colors.sequential.Oryel)
@@ -149,15 +153,11 @@ fig_J = px.scatter(michelin,
 
 ########### L ##############
 
-# L
-
 traces = []
 
 colors = cycle(iter(px.colors.sequential.Oryel))
 
-michelin_filtered = michelin.copy()
-
-def groupby_percentage_to_trace(df, col, colors=colors, name=None):
+def groupby_AB_percentage_to_trace(df, col, colors=colors, name=None):
     
     gb_bar = df.groupby([col]).agg({df.columns[0]: "count"}).rename(columns={df.columns[0] : "count"})
     gb_bar = (gb_bar / gb_bar.sum(axis=0))
@@ -165,8 +165,8 @@ def groupby_percentage_to_trace(df, col, colors=colors, name=None):
 
     return go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name=name)
 
-traces.append(groupby_percentage_to_trace(michelin, "Award", name="full data view"))
-traces.append(groupby_percentage_to_trace(michelin_filtered, "Award", name="filtered data view"))
+traces.append(groupby_AB_percentage_to_trace(michelin_og, "Award", name="full data view"))
+traces.append(groupby_AB_percentage_to_trace(michelin, "Award", name="filtered data view"))
 
 fig_L = go.Figure(traces)
 
@@ -190,9 +190,9 @@ def layout_func(fig):
                     "font": {"color":font_color},
                     "title":{"font":{"color":font_color}},
                     },
-            title=dict(
+            # title=dict(
                 # font={"size": 28.5, "color": font_color},
-                ),
+                # ),
             xaxis=dict(
                 showgrid=False
             ),

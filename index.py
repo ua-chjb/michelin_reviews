@@ -1,17 +1,33 @@
 import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
+import dash_daq as daq
 
-import numpy as np
 from wrangling.charts import fig_A, fig_B, fig_F, fig_G, fig_I, fig_K, fig_H, fig_J, fig_M, fig_N, fig_L, fig_C, fig_D, fig_E, fig_R
 
 
-sidebar = html.Div(
-    [
-        html.P(
-            "this will the navbar"
-        )
-    ], className="sidebar_style",
+sidebar = html.Div([
+        html.Div([
+            html.P(
+                "this will the navbar"
+            ),
+            html.P("", id="placeholder")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("air conditioning"),
+            daq.BooleanSwitch(on=False, color="purple", id="ac_bool")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("wheelchair accessible"),
+            daq.BooleanSwitch(on=False, color="purple", id="wheelchair_bool")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("parking"),
+            daq.BooleanSwitch(on=False, color="purple", id="parking_bool")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+
+
+    ], className="sidebar_style flex_daddy",
 )
 
 # # # # top fold, O, P, Q, A # # # #
