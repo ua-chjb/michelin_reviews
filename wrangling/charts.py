@@ -13,6 +13,19 @@ from itertools import *
 
 from .featureengineering import michelin, gb_geo, onehot_big_pivot, gb_3d
 
+
+# colors discrete
+
+# colors light to dark
+
+# colors diverging
+
+# colors_diverging = [
+#     [0.00, "#044C9C"], #blue
+#     [0.50, "#DBB583"], #tan
+#     [1.00, "#BC2434"], #red
+#     ]
+
 #################### A ######################
 
 geojson = "https://raw.githubusercontent.com/johan/world.geo.json/refs/heads/master/countries.geo.json"
@@ -45,7 +58,7 @@ z_lower_min = "min"
 z_lower_mean = "mean"
 z_lower_max = "max"
 
-fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=px.colors.sequential.Blues)
+fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=px.colors.sequential.Oryel)
 
 
 #################### B ######################
@@ -95,10 +108,10 @@ def pie_final(gb, name, sort=False, textposition=None, title=None, legend_title=
 fig_G = pie_final(count_groupby_one_dimensional(michelin, "Price"), "Price", sort=False, textposition=None, title="price composition", legend_title="legend", colors=px.colors.sequential.Oryel)
 
 # I chart
-fig_I = pie_final(count_groupby_one_dimensional(michelin, "amenities_sum"), "amenities_sum", sort=False, textposition=None, title="price composition", legend_title="legend", colors=px.colors.sequential.Oryel)
+fig_I = pie_final(count_groupby_one_dimensional(michelin, "amenities_sum"), "amenities_sum", sort=False, textposition="inside", title="# of amenities composition", legend_title="legend", colors=px.colors.sequential.Oryel)
 
 # K chart
-fig_K = pie_final(count_groupby_one_dimensional(michelin, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition=None, title="sentiment composition", legend_title="legend", colors=px.colors.sequential.Oryel)
+fig_K = pie_final(count_groupby_one_dimensional(michelin, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition="inside", title="sentiment bucket composition", legend_title="legend", colors=px.colors.sequential.Oryel)
 
 # M chart
 fig_M = pie_final(count_groupby_one_dimensional(michelin, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend", colors=px.colors.sequential.Oryel)
@@ -142,15 +155,64 @@ traces = []
 
 colors = cycle(iter(px.colors.sequential.Oryel))
 
-def groupby_percentage_to_trace(df, col, colors=colors):
+michelin_filtered = michelin.copy()
+
+def groupby_percentage_to_trace(df, col, colors=colors, name=None):
     
     gb_bar = df.groupby([col]).agg({df.columns[0]: "count"}).rename(columns={df.columns[0] : "count"})
     gb_bar = (gb_bar / gb_bar.sum(axis=0))
     gb_bar = gb_bar.T[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]].T.reset_index()
 
-    return go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)})
+    return go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name=name)
 
-traces.append(groupby_percentage_to_trace(michelin, "Award"))
-traces.append(groupby_percentage_to_trace(michelin[michelin["description_sentiment"] > 0.9], "Award"))
+traces.append(groupby_percentage_to_trace(michelin, "Award", name="full data view"))
+traces.append(groupby_percentage_to_trace(michelin_filtered, "Award", name="filtered data view"))
 
 fig_L = go.Figure(traces)
+
+
+# # # # # # # SUMMARY # # # # # # # #
+
+paper_bgcolor="white"
+plot_bgcolor="lightgoldenrodyellow"
+font_color="black"
+legend_color="lightgoldenrodyellow"
+
+def layout_func(fig):
+    
+    fig.update_layout(
+        dict(
+            paper_bgcolor=paper_bgcolor,
+            plot_bgcolor=plot_bgcolor,
+            font={"color": font_color},
+            clickmode="select",
+            legend={"bgcolor":legend_color,
+                    "font": {"color":font_color},
+                    "title":{"font":{"color":font_color}},
+                    },
+            title=dict(
+                # font={"size": 28.5, "color": font_color},
+                ),
+            xaxis=dict(
+                showgrid=False
+            ),
+            yaxis=dict(
+                showgrid=False
+            )
+        )
+    )
+
+    return fig
+
+
+fig_A = layout_func(fig_A)
+fig_B = layout_func(fig_B)
+fig_F = layout_func(fig_F)
+fig_G = layout_func(fig_G)
+fig_H = layout_func(fig_H)
+fig_I = layout_func(fig_I)
+fig_J = layout_func(fig_J)
+fig_K = layout_func(fig_K)
+fig_L = layout_func(fig_L)
+fig_M = layout_func(fig_M)
+fig_R = layout_func(fig_R)
