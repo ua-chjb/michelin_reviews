@@ -58,20 +58,57 @@
 
 /* heights */
 .height_full {
-    height: 600px;
+    height: 570px;
 }
 
 .height_50p {
-    height: 285px;
+    height: 270px;
 }
 
 /*  */
+
+.outertit {
+    display: flex;
+    justify-content: center;
+
+    padding: 10px 0 0 0;
+    margin: 5px 0 50px 0;
+}
+
+.innertit {
+    box-shadow: 0 1% 2% 0 lightgrey;
+    transition: 0.3s;
+    border-radius: 3px;
+    box-shadow: 0 8px 16px 0 lightgray;
+    align-items: center;
+    height: 120px;
+    width: 800px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.inininnrtit {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .top_numbers_row {
     display: flex;
     justify-content:space-around;
     padding: 0 0 20px 0;
 }
 
+h1 {
+    margin-block-start: 0px;
+    margin-block-end: 0;
+}
+
+h6 {
+    margin-block-start: 10px;
+    margin-block-end: 0;    
+}
 .number {
     box-shadow: 0 1% 2% 0 lightgrey;
     transition: 0.3s;
@@ -148,7 +185,7 @@
     position: relative;
     top: 0;
     margin-left: 290px;
-    padding-top: 25px;
+    /* padding-top: 25px; */
     background-color:white;
     /* margin-right: 2rem; */
     /* padding: 2rem 3rem; */

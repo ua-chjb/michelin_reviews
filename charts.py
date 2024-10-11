@@ -11,7 +11,7 @@ import json
 
 from itertools import *
 
-from .featureengineering import michelin, michelin_og, gb_geo, onehot_big_pivot, gb_3d
+from featureengineering import michelin_filtered, michelin_og, gb_geo, onehot_big_pivot, gb_3d
 
 c1 = "tan"
 c2 = "white"
@@ -74,10 +74,6 @@ c5_list= [
     "#A3212E",
 ]
 
-# # # # # # # # # copy for filter # # # # # # # # # # 
-# michelin = michelin_filtered
-# michelin_og = michelin_og
-
 
 #################### A ######################
 
@@ -128,20 +124,20 @@ fig_B = px.scatter_3d(gb_3d,
     {"marker": {"line": {"width": 0}, "size": [h * 10 for h in gb_3d["count"]]}})
 
 ########### C, D, E, R ##############3
-fig_R = px.histogram(michelin, x="Award_ordinal", color_discrete_sequence=[c3]*10).update_layout({"title": "distribution of awards"})
-fig_C = px.histogram(michelin, x="description_sentiment", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of sentiment"})
-fig_D = px.histogram(michelin, x="amenities_sum", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of amenities"})
-fig_E = px.histogram(michelin, x="Price", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of price"})
+fig_R = px.histogram(michelin_filtered, x="Award_ordinal", color_discrete_sequence=[c3]*10).update_layout({"title": "distribution of awards"})
+fig_C = px.histogram(michelin_filtered, x="description_sentiment", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of sentiment"})
+fig_D = px.histogram(michelin_filtered, x="amenities_sum", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of amenities"})
+fig_E = px.histogram(michelin_filtered, x="Price", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of price"})
 
 ########### F ##############3
-fig_F = px.scatter(michelin, x="Country", y="Award_ordinal",
+fig_F = px.scatter(michelin_filtered, x="Country", y="Award_ordinal",
                     opacity=0.05, 
                     size="Price", color="Price", color_continuous_scale=c5_scale, symbol_sequence=["diamond-open"],
                    ).update_layout({"title": "award by country and price"})
 
 
 ########### J ##############3
-fig_J = px.scatter(michelin,
+fig_J = px.scatter(michelin_filtered,
            x="description_sentiment",
            y="Award_ordinal",
            opacity=0.1,
@@ -162,19 +158,19 @@ def pie_final(gb, name, sort=False, textposition=None, title=None, legend_title=
     })
 
 # G chart
-fig_G = pie_final(count_groupby_one_dimensional(michelin, "Price"), "Price", sort=False, textposition=None, title="price composition", legend_title="legend",)
+fig_G = pie_final(count_groupby_one_dimensional(michelin_filtered, "Price"), "Price", sort=False, textposition=None, title="price composition", legend_title="legend",)
 
 # I chart
-fig_I = pie_final(count_groupby_one_dimensional(michelin, "amenities_sum"), "amenities_sum", sort=False, textposition="inside", title="# of amenities composition", legend_title="legend",)
+fig_I = pie_final(count_groupby_one_dimensional(michelin_filtered, "amenities_sum"), "amenities_sum", sort=False, textposition="inside", title="# of amenities composition", legend_title="legend",)
 
 # K chart
-fig_K = pie_final(count_groupby_one_dimensional(michelin, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition="inside", title="sentiment bucket composition", legend_title="legend",)
+fig_K = pie_final(count_groupby_one_dimensional(michelin_filtered, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition="inside", title="sentiment bucket composition", legend_title="legend",)
 
 # M chart
 fig_M = pie_final(count_groupby_one_dimensional(michelin_og, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend",)
 
 # N chart
-fig_N = pie_final(count_groupby_one_dimensional(michelin, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend",)
+fig_N = pie_final(count_groupby_one_dimensional(michelin_filtered, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend",)
 
 ########### H ##############
 
@@ -190,7 +186,7 @@ fig_H = bar_percentage_from_pivot(onehot_big_pivot, title="percentage of each mi
 ########### J ##############
 
 
-fig_J = px.scatter(michelin,
+fig_J = px.scatter(michelin_filtered,
            x="description_sentiment",
            y="Award_ordinal",
            opacity=0.1,
@@ -219,7 +215,7 @@ def groupby_AB_percentage_to_trace(df, col, colors=colors, name=None):
     return go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name=name)
 
 traces.append(groupby_AB_percentage_to_trace(michelin_og, "Award", name="full data view"))
-traces.append(groupby_AB_percentage_to_trace(michelin, "Award", name="filtered data view"))
+traces.append(groupby_AB_percentage_to_trace(michelin_filtered, "Award", name="filtered data view"))
 
 fig_L = go.Figure(traces).update_layout({"title": "A/B comparison"})
 

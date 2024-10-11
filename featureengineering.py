@@ -2,22 +2,22 @@ import numpy as np
 import pandas as pd
 import dash_daq as daq
 
-michelin = pd.read_csv("https://raw.githubusercontent.com/ua-chjb/michelin_reviews/refs/heads/main/assets/data/michelin_cleaned.csv")
-michelin_og = michelin.copy()
+
+from filter_dataframe import michelin_filtered, michelin_og
 
 ################### A ###############
 
 def groupby_three_cunts(df, x, z1, z2, z3, meas1="min", meas2="mean", meas3="max"):
     return df.groupby([x]).agg({z1: ["count", meas1, meas2, meas3], z2: [meas1, meas2, meas3], z3: [meas1, meas2, meas3]}).reset_index()
 
-gb_geo = groupby_three_cunts(michelin, "Alpha_3", "description_sentiment", "Award_ordinal", "proportion_amenities", meas1="min", meas2="mean", meas3="max")
+gb_geo = groupby_three_cunts(michelin_filtered, "Alpha_3", "description_sentiment", "Award_ordinal", "proportion_amenities", meas1="min", meas2="mean", meas3="max")
 
 
 ################### B ###############
 
 # groupby for scatter 3d
 def groupby_for_3d():
-    gb_3d = michelin.groupby(["amenities_sum", "Price", "Award_ordinal"]).agg({"description_sentiment": ["mean", "count"]}).reset_index()
+    gb_3d = michelin_filtered.groupby(["amenities_sum", "Price", "Award_ordinal"]).agg({"description_sentiment": ["mean", "count"]}).reset_index()
     gb_3d.columns = ["amenities_sum", "Price", "Award_ordinal", "sentiment_mean", "count"]
     return gb_3d
 
@@ -45,7 +45,7 @@ onehot_cols = [
 # define function for pivot of bar_percentage chart
 def pivot_table_from_count(df, x, y):
 
-    gb = michelin.groupby([x, y]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :3]
+    gb = michelin_filtered.groupby([x, y]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :3]
     pivot = gb.pivot(columns=x, index=y)
     pivot.columns = pivot.columns.droplevel()
     
@@ -62,16 +62,16 @@ def pivot_table_from_count(df, x, y):
 # combine data for of bar_percentage chart     
 onehot_barchart_dict = {}
 for onehot in onehot_cols:
-    onehot_barchart_dict[onehot] = pivot_table_from_count(michelin, "Award", onehot)
+    onehot_barchart_dict[onehot] = pivot_table_from_count(michelin_filtered, "Award", onehot)
 
 onehot_big_df = pd.concat(onehot_barchart_dict.values())
 onehot_big_df = onehot_big_df.T[::-1].T
 
 onehot_big_df = onehot_big_df[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
 x = "Award"
-df = michelin
+df = michelin_filtered # why is this here
 
-gb = michelin.groupby([x]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :2]
+gb = michelin_filtered.groupby([x]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :2]
 pivot = gb.set_index("Award").T
 
 pivot["sum"] = pivot.sum(axis=1)
@@ -93,5 +93,5 @@ onehot_big_pivot = onehot_big_pivot.sort_values(by=["3 Stars"], ascending=True)
 
 ################### END ###############
 
-michelin = michelin
+michelin_filtered = michelin_filtered
 michelin_og = michelin_og
