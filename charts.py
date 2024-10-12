@@ -59,8 +59,20 @@ c5_scale = [
     [0.8, "#D74353"],
     [0.9, "#BC2434"],
     [1.0, "#A3212E"],
-    
 ]
+c5_scale_geo = [
+    [0.0, "burlywood"],
+    # [0.1, "#3F7EC5"],
+    # [0.2, "#699AD1"],
+    # [0.3, "#99BEE7"],
+    [0.4, "#EE8792"],
+    # [0.6, "#FFB8BF"],
+    # [0.7, "#EE8792"],
+    # [0.8, "#D74353"],
+    # [0.9, "#BC2434"],
+    [1.0, "#A3212E"],
+]
+
 c5_list= [
     "#044C9C",
     "#3F7EC5",
@@ -90,6 +102,8 @@ def geo_better(gb, geojson, gb_location_column, z_upper, z_lower, colors=c4_scal
     trace = go.Choroplethmap(geojson=geojson, 
                              locations=gb[gb_location_column], 
                              z=gb[(z_upper, z_lower)],
+                             zmax = 5,
+                             zmin = 1,
                              colorscale=colors, 
                              marker={"line": {"width": 0.001, "color": "white"}}
                               )
@@ -107,7 +121,7 @@ z_lower_min = "min"
 z_lower_mean = "mean"
 z_lower_max = "max"
 
-fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=c5_scale)
+fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=c5_scale_geo)
 
 
 #################### B ######################

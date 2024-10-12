@@ -3,28 +3,26 @@ from dash import html
 from dash import dcc
 import dash_daq as daq
 
-from dash import Input, Output, callback
 from load_data import michelin, michelin_og
-
 
 ac_switch = html.Div([
     html.P("air conditioning"),
     daq.BooleanSwitch(on=False, color="purple", id="ac_bool")
 ], className="navbar_flex_baby flex_daddy space_between")
 
-
-
-
-@callback(
-    Output(component_id="placeholder", component_property="children"),
-    Input(component_id="ac_bool", component_property="on")
-)
-def update_bool(on):
-    if on:
-        ac_flag = 0
-    else:
-        ac_flag = -1
-
+global ac_flag
+global wheelchair_flag
+global parking_flag
+global garden_flag
+global wine_flag
+global terrace_flag
+global valet_flag
+global vegetarian_flag
+global counter_flag
+global view_flag
+global noshoes_flag
+global cashonly_flag
+global sake_flag
 
 ac_flag = -1
 wheelchair_flag = -1
@@ -57,8 +55,6 @@ mask13 = (michelin["sake"] > sake_flag)
 michelin_filtered = michelin[mask1 & mask2 & mask3 & mask4 & mask5 & mask6 & mask7 & mask8 & mask9 & mask10 & mask11 & mask12 & mask13]
 
 
-# michelin_filtered = df
-
 # this succesfully filters df to just three countries
 # michelin_filtered = michelin[michelin["Country"].isin(["United States", "Singapore", "Slovenia"])]
 
@@ -67,6 +63,7 @@ sidebar = html.Div([
             html.P(
                 "this will the navbar"
             ),
+            html.P(f"{len(michelin_filtered)}"),
             html.P("", id="placeholder")
         ], className="navbar_flex_baby flex_daddy space_between"),
         html.Div([

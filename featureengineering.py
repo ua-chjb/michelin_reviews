@@ -62,7 +62,10 @@ def pivot_table_from_count(df, x, y):
 # combine data for of bar_percentage chart     
 onehot_barchart_dict = {}
 for onehot in onehot_cols:
-    onehot_barchart_dict[onehot] = pivot_table_from_count(michelin_filtered, "Award", onehot)
+    try:
+        onehot_barchart_dict[onehot] = pivot_table_from_count(michelin_filtered, "Award", onehot)
+    except:
+        pass
 
 onehot_big_df = pd.concat(onehot_barchart_dict.values())
 onehot_big_df = onehot_big_df.T[::-1].T
