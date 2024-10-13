@@ -5,7 +5,7 @@ import dash_daq as daq
 from dash import Input, Output, callback
 
 from filter_dataframe import sidebar
-from charts import fig_A, fig_B, fig_F, fig_G, fig_I, fig_K, fig_H, fig_J, fig_M, fig_N, fig_L, fig_C, fig_D, fig_E, fig_R
+from charts import fig_A, fig_B, fig_F, fig_G, fig_I, fig_K, fig_H, fig_J, fig_M, fig_N, fig_L, fig_R
 
 
 # # # # top fold, O, P, Q, A # # # #

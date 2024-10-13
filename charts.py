@@ -12,80 +12,7 @@ import json
 from itertools import *
 
 from featureengineering import michelin_filtered, michelin_og, gb_geo, onehot_big_pivot, gb_3d
-
-c1 = "tan"
-c2 = "white"
-c3 = "#BC2434"
-
-c4_scale = [
-    [0.0, "#FFB8BF"],
-    [0.25, "#EE8792"],
-    [0.50, "#D74353"],
-    [0.75, "#BC2434"],
-    [1.0, "#A3212E"]
-]
-
-c4_list = [
-    "#FFB8BF",
-    "#EE8792",
-    "#D74353",
-    "#BC2434",
-    "#A3212E"
-]
-
-
-c5_scale = [
-    [0.0, "#A3212E"],
-    [0.1, "#BC2434"],
-    [0.2, "#D74353"],
-    [0.3, "#EE8792"],
-    [0.4, "#FFB8BF"],
-    [0.6, "#C8DFF8"],
-    [0.7, "#99BEE7"],
-    [0.8, "#699AD1"],
-    [0.9, "#3F7EC5"],
-    [1.0, "#044C9C"],
-    
-]
-
-c5_scale = [
-    [0.0, "#044C9C"],
-    [0.1, "#3F7EC5"],
-    [0.2, "#699AD1"],
-    [0.3, "#99BEE7"],
-    [0.4, "#C8DFF8"],
-    [0.6, "#FFB8BF"],
-    [0.7, "#EE8792"],
-    [0.8, "#D74353"],
-    [0.9, "#BC2434"],
-    [1.0, "#A3212E"],
-]
-c5_scale_geo = [
-    [0.0, "burlywood"],
-    # [0.1, "#3F7EC5"],
-    # [0.2, "#699AD1"],
-    # [0.3, "#99BEE7"],
-    [0.4, "#EE8792"],
-    # [0.6, "#FFB8BF"],
-    # [0.7, "#EE8792"],
-    # [0.8, "#D74353"],
-    # [0.9, "#BC2434"],
-    [1.0, "#A3212E"],
-]
-
-c5_list= [
-    "#044C9C",
-    "#3F7EC5",
-    "#699AD1",
-    "#99BEE7",
-    "#C8DFF8",
-    "#FFB8BF",
-    "#EE8792",
-    "#D74353",
-    "#BC2434",
-    "#A3212E",
-]
-
+from colors import c1, c2, c3, c4_scale, c4_list, c5_scale, c5_list, c6
 
 #################### A ######################
 
@@ -121,7 +48,7 @@ z_lower_min = "min"
 z_lower_mean = "mean"
 z_lower_max = "max"
 
-fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=c5_scale_geo)
+fig_A = geo_better(gb_geo, geojson, "Alpha_3", z2, z_lower_mean, colors=c5_scale)
 
 
 #################### B ######################
@@ -133,9 +60,14 @@ fig_B = px.scatter_3d(gb_3d,
     color="sentiment_mean",
     size="count",
     color_continuous_scale=c5_scale,
+    range_color=[-1, 1],
+    # zmax = 1,
+    # zmin = -1,
     # symbol_sequence=["diamond-open"]
-).update_layout({"title": "price, num of amenities, and award received, with color as sentiment"}).update_traces(
-    {"marker": {"line": {"width": 0}, "size": [h * 10 for h in gb_3d["count"]]}})
+).update_layout({"title": "price, num of amenities, and award received, with color as sentiment",
+                #  "scene": {"zaxis": {"range": [-1, 1]}}
+                 }).update_traces(
+    {"marker": {"line": {"width": 0}, "size": [h * 10 for h in gb_3d["count"]]}}).update_coloraxes(colorbar={"tickvals":[-1, 1]})
 
 ########### C, D, E, R ##############3
 fig_R = px.histogram(michelin_filtered, x="Award_ordinal", color_discrete_sequence=[c3]*10).update_layout({"title": "distribution of awards"})
@@ -188,7 +120,7 @@ fig_N = pie_final(count_groupby_one_dimensional(michelin_filtered, "Award"), "Aw
 
 ########### H ##############
 
-def bar_percentage_from_pivot(pivot, title, x_title=None, y_title=None, colors=c4_list):
+def bar_percentage_from_pivot(pivot, title, x_title=None, y_title=None, colors=c5_list):
     return px.bar(pivot, x=pivot.columns, y=pivot.index, color_discrete_sequence=colors).update_layout({
         "title": title, "xaxis": {"title": x_title}, "yaxis": {"title": y_title},
         "legend" : {"visible": False}
@@ -218,7 +150,7 @@ fig_J = px.scatter(michelin_filtered,
 
 traces = []
 
-colors = cycle(iter([c5_list[-1], c5_list[0]]))
+colors = cycle(iter([c5_list[-1], c6]))
 
 def groupby_AB_percentage_to_trace(df, col, colors=colors, name=None):
     
