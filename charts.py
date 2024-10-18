@@ -11,19 +11,11 @@ import json
 
 from itertools import *
 
-from featureengineering import michelin, michelin_og, onehot_big_pivot
+# from featureengineering import michelin, onehot_big_pivot
+from load_data import michelin
 from colors import c1, c2, c3, c4_scale, c4_list, c5_scale, c5_list, c6
 
 #################### A ######################
-
-# geojson = "https://raw.githubusercontent.com/johan/world.geo.json/refs/heads/master/countries.geo.json"
-
-
-# def groupby_three_cunts(df, x, z1, z2, z3, meas1="min", meas2="mean", meas3="max"):
-#     return df.groupby([x]).agg({z1: ["count", meas1, meas2, meas3], z2: [meas1, meas2, meas3], z3: [meas1, meas2, meas3]}).reset_index()
-
-# gb_geo = groupby_three_cunts(michelin, "Alpha_3", "description_sentiment", "Award_ordinal", "proportion_amenities", meas1="min", meas2="mean", meas3="max")
-
 
 
 def fig_a_func(df, colors=c5_scale):
@@ -78,10 +70,6 @@ def fig_b_func(df):
 def fig_r_func(df):
     return px.histogram(df, x="Award_ordinal", color_discrete_sequence=[c3]*10).update_layout({"title": "distribution of awards"})
 
-# fig_C = px.histogram(michelin_filtered, x="description_sentiment", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of sentiment"})
-# fig_D = px.histogram(michelin_filtered, x="amenities_sum", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of amenities"})
-# fig_E = px.histogram(michelin_filtered, x="Price", color_discrete_sequence=px.colors.sequential.Oryel).update_layout({"title": "distribution of price"})
-
 ########### F ##############3
 
 def fig_f_func(df):
@@ -91,17 +79,7 @@ def fig_f_func(df):
                    ).update_layout({"title": "award by country and price"})
 
 
-########### J ##############3
-fig_J = px.scatter(michelin,
-           x="description_sentiment",
-           y="Award_ordinal",
-           opacity=0.1,
-           color="Award_ordinal",
-           symbol_sequence=["diamond-open"],
-           color_continuous_scale=c4_list,
-          ).update_layout({"title": "awards by description sentiment", "showlegend": False, "coloraxis_showscale": False})
-
-########### G, I, K, M ##############
+########### G, I, K, M, N ##############
 
 def pie_gb(df, name):
     return df.groupby([name]).count().iloc[::, :1].rename(columns={"Name": "count"}).reset_index()
@@ -112,20 +90,8 @@ def pie_g_i_k_m_n(gb, name, sort=False, textposition=None, title=None, legend_ti
         "title": {"text": title, "x": 0.5}, "legend": {"title": legend_title}
     })
 
-# G chart
-# fig_G = pie_g_i_k_m_n(pie_gb(michelin, "Price"), "Price", title="price composition",)
-
-# I chart
-# fig_I = pie_g_i_k_m_n(pie_gb(michelin, "amenities_sum"), "amenities_sum", textposition="inside", title="# of amenities composition")
-
-# K chart
-# fig_K = pie_g_i_k_m_n(pie_gb(michelin, "sentiment_cuts"), "sentiment_cuts", textposition="inside", title="sentiment bucket composition")
-
-# M chart
-# fig_M = pie_g_i_k_m_n(pie_gb(michelin_og, "Award"), "Award", sort=None, textposition=None, title="awards composition")
-
 # N chart
-fig_N = pie_g_i_k_m_n(pie_gb(michelin, "Award"), "Award", sort=None, textposition=None, title="awards composition", legend_title="legend",)
+fig_N = pie_g_i_k_m_n(pie_gb(michelin, "Award"), "Award", sort=False, textposition=None, title="awards, not filtered")
 
 ########### H ##############
 
@@ -228,23 +194,23 @@ def fig_j_func(df):
 
 ########### L ##############
 
-traces = []
-
-colors = cycle(iter([c5_list[-1], c6]))
-
-def groupby_AB_percentage_to_trace(df, col, colors=colors, name=None):
+def fig_l_func(df1, df2, col="Award", colors=cycle(iter([c5_list[-1], c6])),):
     
-    gb_bar = df.groupby([col]).agg({df.columns[0]: "count"}).rename(columns={df.columns[0] : "count"})
+    gb_bar = df1.groupby([col]).agg({df1.columns[0]: "count"}).rename(columns={df1.columns[0] : "count"})
     gb_bar = (gb_bar / gb_bar.sum(axis=0))
     gb_bar = gb_bar.T[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]].T.reset_index()
 
-    return go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name=name)
+    trace1 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name="filtered")
 
-traces.append(groupby_AB_percentage_to_trace(michelin_og, "Award", name="full data view"))
-traces.append(groupby_AB_percentage_to_trace(michelin, "Award", name="filtered data view"))
+    gb_bar = df2.groupby([col]).agg({df2.columns[0]: "count"}).rename(columns={df2.columns[0] : "count"})
+    gb_bar = (gb_bar / gb_bar.sum(axis=0))
+    gb_bar = gb_bar.T[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]].T.reset_index()
 
-fig_L = go.Figure(traces).update_layout({"title": "A/B comparison"})
+    trace2 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name="not filtered")
 
+    fig = go.Figure([trace1, trace2]).update_layout({"title": "A/B comparison"})
+
+    return fig
 
 # # # # # # # SUMMARY # # # # # # # #
 

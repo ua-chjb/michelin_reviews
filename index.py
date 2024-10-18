@@ -4,8 +4,8 @@ from dash import dcc
 import dash_daq as daq
 from dash import Input, Output, callback
 
-from featureengineering import michelin, michelin_og
-from charts import fig_H, fig_N, fig_L
+from load_data import michelin
+from charts import fig_H, fig_N
 
 ################################# sidebar #################################
 
@@ -95,22 +95,22 @@ Chart_3d = dbc.Card(
 ### R ###
 Hist_R = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_r", className="height_50p")
+        dcc.Graph(figure={}, id="fig_r", className="theheight_50p1")
     ], className="standard_card")
 )
 
 Descr_R = dbc.Card(
     dbc.CardBody([
         html.H3("Quantitative summary"),
-        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
-    ], className="standard_card height_50p")
+        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards.")
+    ], className="standard_card theheight_50p2")
 
 )
 
 # # # # # # # F # # # # # # # # 
 Price_G = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_g", className="height_50p")
+        dcc.Graph(figure={}, id="fig_g", className="theheight_50p1")
     ], className="standard_card")
 )
 
@@ -123,8 +123,8 @@ Price_F = dbc.Card(
 Descr_G = dbc.Card(
     dbc.CardBody([
         html.H3("Quantitative summary"),
-        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
-    ], className="standard_card height_50p")
+        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: ")
+    ], className="standard_card theheight_50p2")
 )
 
 
@@ -137,22 +137,22 @@ Amen_H = dbc.Card(
 
 Amen_I = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_i", className="height_50p")
+        dcc.Graph(figure={}, id="fig_i", className="theheight_50p1")
     ], className="standard_card")
 )
 
 Descr_I = dbc.Card(
     dbc.CardBody([
         html.H3("Quantitative summary"),
-        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
-    ], className="standard_card height_50p")
+        html.P("Content that explains how the datas")
+    ], className="standard_card theheight_50p2")
 )
 
 
 # # # # # # # J # # # # # # # # 
 Sent_K = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_k", className="height_50p")
+        dcc.Graph(figure={}, id="fig_k", className="theheight_50p1")
     ], className="standard_card")
 )
 
@@ -166,15 +166,15 @@ Sent_J = dbc.Card(
 Descr_K= dbc.Card(
     dbc.CardBody([
         html.H3("Quantitative summary"),
-        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
-    ], className="standard_card height_50p")
+        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering")
+    ], className="standard_card theheight_50p2")
 )
 
 
 # # # # # # # L # # # # # # # # 
 Awards_L = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_L, id="fig_l", className="height_full")
+        dcc.Graph(figure={}, id="fig_l", className="height_full")
     ], className="standard_card")
 )
 
@@ -184,10 +184,10 @@ Awards_M = dbc.Card(
     ], className="standard_card")
 )
 
-Descr_M = dbc.Card(
+Awards_N = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_N, id="fig_n")
-    ], className="standard_card height_50p")
+        dcc.Graph(figure=fig_N, id="fig_n", className="height_50p")
+    ], className="standard_card")
 )
 
 
@@ -281,7 +281,7 @@ content = dbc.Container(
 
                 html.Div([
                     Awards_M,
-                    Descr_M,
+                    Awards_N,
                 ], className="histogram_flex_baby histogram_flex_daddy"),
 
             ], className="flex_daddy")

@@ -1,10 +1,9 @@
-import dash
-import dash_bootstrap_components as dbc
+from dash import Dash
 
 from index import lyt
 from callbacks import callbacks_baby
 
-app = dash.Dash(__name__)
+app = Dash(__name__)
 
 app.layout = lyt
 
