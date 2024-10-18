@@ -4,8 +4,45 @@ from dash import dcc
 import dash_daq as daq
 from dash import Input, Output, callback
 
-from filter_dataframe import sidebar
-from charts import fig_A, fig_B, fig_F, fig_G, fig_I, fig_K, fig_H, fig_J, fig_M, fig_N, fig_L, fig_R
+from featureengineering import michelin, michelin_og
+from charts import fig_H, fig_N, fig_L
+
+################################# sidebar #################################
+
+sidebar = html.Div([
+        html.Div([
+            html.P(
+                "this will the navbar"
+            ),
+            html.P(f"{len(michelin)}"),
+            html.P("", id="placeholder")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            dcc.Dropdown(
+                [j for j in michelin["Country"].unique()],
+                multi=False,
+                searchable=True,
+                id="country_dropdown"
+            ),
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("air conditioning"),
+            daq.BooleanSwitch(on=False, color="purple", id="ac_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("wheelchair accessible"),
+            daq.BooleanSwitch(on=False, color="purple", id="wheelchair_bool")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("parking"),
+            daq.BooleanSwitch(on=False, color="purple", id="parking_bool")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+
+
+    ], className="sidebar_style flex_daddy",
+)
+
+################################# content #################################
 
 
 # # # # top fold, O, P, Q, A # # # #
@@ -42,7 +79,7 @@ Card2 = dbc.Card(
 
 Geo_chart = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_A, className="height_full")
+        dcc.Graph(figure={}, id="fig_a", className="height_full")
     ], className="standard_card")
 )
 
@@ -50,7 +87,7 @@ Geo_chart = dbc.Card(
 
 Chart_3d = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_B, className="height_full")
+        dcc.Graph(figure={}, id="fig_b", className="height_full")
     ], className="standard_card")
 )
 
@@ -58,7 +95,7 @@ Chart_3d = dbc.Card(
 ### R ###
 Hist_R = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_R, className="height_50p")
+        dcc.Graph(figure={}, id="fig_r", className="height_50p")
     ], className="standard_card")
 )
 
@@ -71,15 +108,15 @@ Descr_R = dbc.Card(
 )
 
 # # # # # # # F # # # # # # # # 
-Price_F = dbc.Card(
+Price_G = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_F, className="height_full")
+        dcc.Graph(figure={}, id="fig_g", className="height_50p")
     ], className="standard_card")
 )
 
-Price_G = dbc.Card(
+Price_F = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_G, className="height_50p")
+        dcc.Graph(figure={}, id="fig_f", className="height_full")
     ], className="standard_card")
 )
 
@@ -88,7 +125,6 @@ Descr_G = dbc.Card(
         html.H3("Quantitative summary"),
         html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
     ], className="standard_card height_50p")
-
 )
 
 
@@ -101,7 +137,7 @@ Amen_H = dbc.Card(
 
 Amen_I = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_I, className="height_50p")
+        dcc.Graph(figure={}, id="fig_i", className="height_50p")
     ], className="standard_card")
 )
 
@@ -114,17 +150,18 @@ Descr_I = dbc.Card(
 
 
 # # # # # # # J # # # # # # # # 
-Sent_J = dbc.Card(
+Sent_K = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_J, className="height_full")
+        dcc.Graph(figure={}, id="fig_k", className="height_50p")
     ], className="standard_card")
 )
 
-Sent_K = dbc.Card(
+Sent_J = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_K, className="height_50p")
+        dcc.Graph(figure={}, id="fig_j", className="height_full")
     ], className="standard_card")
 )
+
 
 Descr_K= dbc.Card(
     dbc.CardBody([
@@ -137,20 +174,19 @@ Descr_K= dbc.Card(
 # # # # # # # L # # # # # # # # 
 Awards_L = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_L, className="height_full")
+        dcc.Graph(figure=fig_L, id="fig_l", className="height_full")
     ], className="standard_card")
 )
 
 Awards_M = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_M, className="height_50p")
+        dcc.Graph(figure={}, id="fig_m", className="height_50p")
     ], className="standard_card")
 )
 
 Descr_M = dbc.Card(
     dbc.CardBody([
-        html.H3("Quantitative summary"),
-        html.P("Content that explains how the dataset has one main quantitative variable before feature engineering: Awards. This dependent variable measures which final michelin star rating was given. Unsurprisingly, there appears to be a correlation between price and a higher amount of stars. Amenities also seem to play a role.")
+        dcc.Graph(figure=fig_N, id="fig_n")
     ], className="standard_card height_50p")
 )
 
@@ -251,16 +287,13 @@ content = dbc.Container(
             ], className="flex_daddy")
         ], className="row"),
 
-
-
-
     ], className="CONTENT_STYLE")
 )
 
-# content = html.Div(id="page-content", children=[], className="CONTENT_STYLE")
+store = dcc.Store(id="mdstore")
 
 lyt = html.Div([
-    # dcc.Location(id="url", refresh=True),
     sidebar,
-    content
+    content,
+    store
 ])

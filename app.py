@@ -1,16 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
-# from whitenoise import WhiteNoise
 
-from server import server_var, app_var
 from index import lyt
+from callbacks import callbacks_baby
 
-server = server_var
+app = dash.Dash(__name__)
 
-app_var.layout = lyt
+app.layout = lyt
+
+callbacks_baby(app)
 
 if __name__ == '__main__':
-    app_var.run_server(debug=True, 
-        # host='0.0.0.0'
-        port='8070'
-        )
+    app.run_server(debug=True, port='8050')
