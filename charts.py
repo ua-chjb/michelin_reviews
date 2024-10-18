@@ -13,7 +13,7 @@ from itertools import *
 
 # from featureengineering import michelin, onehot_big_pivot
 from load_data import michelin
-from colors import c1, c2, c3, c4_scale, c4_list, c5_scale, c5_list, c6
+from colors import c1, c2, c3, c4_scale, c4_list, c5_scale, c5_list, c6, c7
 
 #################### A ######################
 
@@ -194,19 +194,19 @@ def fig_j_func(df):
 
 ########### L ##############
 
-def fig_l_func(df1, df2, col="Award", colors=cycle(iter([c5_list[-1], c6])),):
+def fig_l_func(df1, df2, col="Award"):
     
     gb_bar = df1.groupby([col]).agg({df1.columns[0]: "count"}).rename(columns={df1.columns[0] : "count"})
     gb_bar = (gb_bar / gb_bar.sum(axis=0))
     gb_bar = gb_bar.T[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]].T.reset_index()
 
-    trace1 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name="filtered")
+    trace1 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": c6}, name="filtered")
 
     gb_bar = df2.groupby([col]).agg({df2.columns[0]: "count"}).rename(columns={df2.columns[0] : "count"})
     gb_bar = (gb_bar / gb_bar.sum(axis=0))
     gb_bar = gb_bar.T[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]].T.reset_index()
 
-    trace2 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": next(colors)}, name="not filtered")
+    trace2 = go.Bar(x = gb_bar[col], y = gb_bar["count"], marker={"color": c7}, name="not filtered")
 
     fig = go.Figure([trace1, trace2]).update_layout({"title": "A/B comparison"})
 

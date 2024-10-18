@@ -31,13 +31,52 @@ sidebar = html.Div([
         ], className="navbar_flex_baby flex_daddy space_between"),
         html.Div([
             html.P("wheelchair accessible"),
-            daq.BooleanSwitch(on=False, color="purple", id="wheelchair_bool")
+            daq.BooleanSwitch(on=False, color="purple", id="wheelchair_flag")
         ], className="navbar_flex_baby flex_daddy space_between"),
         html.Div([
-            html.P("parking"),
-            daq.BooleanSwitch(on=False, color="purple", id="parking_bool")
+            html.P("parking on site"),
+            daq.BooleanSwitch(on=False, color="purple", id="parking_flag")
         ], className="navbar_flex_baby flex_daddy space_between"),
-
+        html.Div([
+            html.P("valet available"),
+            daq.BooleanSwitch(on=False, color="purple", id="valet_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("counter service"),
+            daq.BooleanSwitch(on=False, color="purple", id="counter_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("cash only"),
+            daq.BooleanSwitch(on=False, color="purple", id="cashonly_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("vegetarian menu"),
+            daq.BooleanSwitch(on=False, color="purple", id="vegetarian_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("shoes must be removed"),
+            daq.BooleanSwitch(on=False, color="purple", id="noshoes_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("notable sake list"),
+            daq.BooleanSwitch(on=False, color="purple", id="sake_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("terrace"),
+            daq.BooleanSwitch(on=False, color="purple", id="terrace_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("view"),
+            daq.BooleanSwitch(on=False, color="purple", id="view_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("garden"),
+            daq.BooleanSwitch(on=False, color="purple", id="garden_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
+        html.Div([
+            html.P("notable wine list"),
+            daq.BooleanSwitch(on=False, color="purple", id="wine_flag")
+        ], className="navbar_flex_baby flex_daddy space_between"),
 
     ], className="sidebar_style flex_daddy",
 )
@@ -276,7 +315,7 @@ content = dbc.Container(
             html.Div([
 
                 html.Div([
-                    dbc.Col(Awards_L)
+                    dbc.Col(Awards_L),
                 ], className="threed_flex_baby"),
 
                 html.Div([
@@ -290,7 +329,9 @@ content = dbc.Container(
     ], className="CONTENT_STYLE")
 )
 
-store = dcc.Store(id="mdstore")
+store = html.Div([
+    dcc.Store(id="mdstore", data={}, storage_type="memory"),
+])
 
 lyt = html.Div([
     sidebar,
