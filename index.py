@@ -1,11 +1,8 @@
 import dash_bootstrap_components as dbc
-from dash import html
-from dash import dcc
+from dash import html, dcc
 import dash_daq as daq
-from dash import Input, Output, callback
 
-from load_data import michelin
-from charts import fig_a_geo, fig_b_scatter3d, fig_r_hist, fig_f_scatter, fig_G_pie, fig_I_pie, fig_N_pie, fig_H
+from charts import  fig_r_hist, fig_I_pie, fig_N_pie, fig_H, layout_func
 
 
 ################################# sidebar #################################
@@ -22,11 +19,12 @@ sidebar = html.Div([
                    """),
             html.H2("Conclusion"),
             html.P("""
-                    Certain amenities did make it more likely ... 
+                    Certain amenities made a statistically significant difference in the odds of receiving more Michelin stars. Significance calculated at 95% confidence.
                    """),
+            html.H2("Key Insight"),
         html.Div([
             html.P(""" "Notable wine list" """),
-            daq.BooleanSwitch(on=False, color="burlywood", id="wine_flag")
+            daq.BooleanSwitch(on=False, color="#bd2333", id="wine_flag")
         ], className="navbar_flex_baby flex_daddy space_between"),
         ])
     ], className="sidebar_style flex_daddy",
@@ -43,19 +41,20 @@ Title_card = dbc.Card(
 
 Hist_R = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_r_hist, id="fig_r", className="height_50p")
+        dcc.Graph(figure=layout_func(fig_r_hist), id="fig_r", className="height_50p")
     ], className="standard_card")
 )
 
 Amen_H = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_H, className="height_full")
+        dcc.Graph(figure=layout_func(fig_H).update_layout(
+            {"xaxis": {"mirror": True}}).add_vline(x=1, line_width=4, line_color="lightgrey"), className="height_full")
     ], className="standard_card")
 )
 
 Amen_I = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_I_pie, id="fig_i", className="height_50p")
+        dcc.Graph(figure=layout_func(fig_I_pie), id="fig_i", className="height_50p")
     ], className="standard_card")
 )
 
@@ -73,7 +72,7 @@ Awards_M = dbc.Card(
 
 Awards_N = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_N_pie, id="fig_n", className="height_50p")
+        dcc.Graph(figure=layout_func(fig_N_pie), id="fig_n", className="height_50p")
     ], className="standard_card")
 )
 

@@ -10,11 +10,17 @@
     bottom: 0;
     width: 275px;
     padding: 5px 10px;
-    background-color: rgb(167, 131, 86);
-    color:white;
+    background-color: white;
+    color:black;
 
     flex-direction: column;
     align-items: flex-end;
+
+    box-shadow: 0 1% 2% 0 lightgrey;
+    transition: 0.3s;
+    border-radius: 3px;
+    box-shadow: 0 8px 16px 0 lightgray;
+
 }
 
 /*  general  */
@@ -69,6 +75,8 @@
 .outertit {
     display: flex;
     justify-content: center;
+    background-color: #238b45;
+    color: white;
 
     padding: 10px 0 0 0;
 }
@@ -80,7 +88,7 @@
     box-shadow: 0 8px 16px 0 lightgray;
     align-items: center;
     height: 120px;
-    width: 75vw;
+    width: 75.52vw;
 
     display: flex;
     justify-content: center;

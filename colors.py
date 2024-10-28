@@ -3,7 +3,7 @@ import plotly.express as px
 c1 = "tan"
 c2 = "white"
 c3 = px.colors.sequential.Greens[-3]
-c7 = "#A3212E"
+c7 = "#cca169"
 c6 = "burlywood"
 
 c4_scale = [
@@ -14,7 +14,7 @@ c4_scale = [
     [1.0, "#A3212E"]
 ]
 
-c4_list = px.colors.sequential.Greens[:6]
+c4_list = px.colors.sequential.Greens[::-1]
 
 [
     "#FFB8BF",
