@@ -10,20 +10,12 @@
     bottom: 0;
     width: 275px;
     padding: 5px 10px;
-    background-color: #BC2434;
+    background-color: rgb(167, 131, 86);
     color:white;
 
     flex-direction: column;
     align-items: flex-end;
 }
-
-/* .SIDEBAR_STYLE a {
-    color: white;
-}
-
-.SIDEBAR_STYLE a:hover {
-    color: hotpink;
-} */
 
 /*  general  */
 .standard_card {
@@ -79,7 +71,6 @@
     justify-content: center;
 
     padding: 10px 0 0 0;
-    margin: 5px 0 50px 0;
 }
 
 .innertit {
@@ -188,7 +179,7 @@ h6 {
 
 /* content positioning */
 
-.CONTENT_STYLE {
+.content_style {
     position: relative;
     top: 0;
     margin-left: 290px;
