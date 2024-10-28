@@ -5,79 +5,30 @@ import dash_daq as daq
 from dash import Input, Output, callback
 
 from load_data import michelin
-from charts import fig_H, fig_N
+from charts import fig_a_geo, fig_b_scatter3d, fig_r_hist, fig_f_scatter, fig_G_pie, fig_I_pie, fig_K_pie, fig_N_pie, fig_j_scatter
+
 
 ################################# sidebar #################################
 
 sidebar = html.Div([
         html.Div([
-            html.P(
-                "this will the navbar"
-            ),
-            html.P(f"{len(michelin)}"),
-            html.P("", id="placeholder")
-        ], className="navbar_flex_baby flex_daddy space_between"),
+            html.H2("Question"),
+            html.P("""
+                    Is there any way to gain competitive edged in receiving a Michelin Star?
+                   """),
+            html.H2("Analysis"),
+            html.P("""
+                    Restaurants with a "notable wine list" were more likley to receive more Michelin Stars than those without. See bottom histogram for a side-by-side comparison.
+                   """),
+            html.H2("Conclusion"),
+            html.P("""
+                    It is not possible to asset causation with this little of data, but the inclusion of a good wine list could give a restuarant a better experience in its pursuit of Michelin Stars.
+                   """),
         html.Div([
-            dcc.Dropdown(
-                [j for j in michelin["Country"].unique()],
-                multi=False,
-                searchable=True,
-                id="country_dropdown"
-            ),
+            html.P(""" "Notable wine list" """),
+            daq.BooleanSwitch(on=False, color="maroon", id="wine_flag")
         ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("air conditioning"),
-            daq.BooleanSwitch(on=False, color="purple", id="ac_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("wheelchair accessible"),
-            daq.BooleanSwitch(on=False, color="purple", id="wheelchair_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("parking on site"),
-            daq.BooleanSwitch(on=False, color="purple", id="parking_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("valet available"),
-            daq.BooleanSwitch(on=False, color="purple", id="valet_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("counter service"),
-            daq.BooleanSwitch(on=False, color="purple", id="counter_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("cash only"),
-            daq.BooleanSwitch(on=False, color="purple", id="cashonly_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("vegetarian menu"),
-            daq.BooleanSwitch(on=False, color="purple", id="vegetarian_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("shoes must be removed"),
-            daq.BooleanSwitch(on=False, color="purple", id="noshoes_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("notable sake list"),
-            daq.BooleanSwitch(on=False, color="purple", id="sake_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("terrace"),
-            daq.BooleanSwitch(on=False, color="purple", id="terrace_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("view"),
-            daq.BooleanSwitch(on=False, color="purple", id="view_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("garden"),
-            daq.BooleanSwitch(on=False, color="purple", id="garden_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-        html.Div([
-            html.P("notable wine list"),
-            daq.BooleanSwitch(on=False, color="purple", id="wine_flag")
-        ], className="navbar_flex_baby flex_daddy space_between"),
-
+        ])
     ], className="sidebar_style flex_daddy",
 )
 
@@ -88,29 +39,29 @@ sidebar = html.Div([
 
 Title_card = dbc.Card(
     dbc.CardBody([
-        html.H1("Michelin star reviews from Jerry Ng"),
-        html.H6("analysis by Benjamin Noyes")
+        html.H1('Michelin Awards, one insight'),
+        html.P("Benjamin Noyes")
     ], className="flex_daddy inininnrtit")
 )
 
 Card0 = dbc.Card(
     dbc.CardBody([
-        html.H1("15,000"),
-        html.H3("first number"),
+        html.H2(len(michelin)),
+        html.P("Total Restaurants"),
         ], className="number")
     )
 
 Card1 = dbc.Card(
     dbc.CardBody([
-        html.H1("5.6"),
-        html.H3("second number"),
+        html.H2(len(michelin[michelin["Award_ordinal"]==5])),
+        html.P("3 Star Restaraunts"),
         ], className="number")
     )
 
 Card2 = dbc.Card(
     dbc.CardBody([
-        html.H1("300"),
-        html.H3("third number"),
+        html.H2(len(michelin["Alpha_3"].unique())),
+        html.P("Countries"),
         ], className="number")
     ),
 
@@ -118,7 +69,7 @@ Card2 = dbc.Card(
 
 Geo_chart = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_a", className="height_full")
+        dcc.Graph(figure=fig_a_geo, id="fig_a", className="height_full")
     ], className="standard_card")
 )
 
@@ -126,7 +77,7 @@ Geo_chart = dbc.Card(
 
 Chart_3d = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_b", className="height_full")
+        dcc.Graph(figure=fig_b_scatter3d, id="fig_b", className="height_full")
     ], className="standard_card")
 )
 
@@ -134,7 +85,7 @@ Chart_3d = dbc.Card(
 ### R ###
 Hist_R = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_r", className="theheight_50p1")
+        dcc.Graph(figure=fig_r_hist, id="fig_r", className="theheight_50p1")
     ], className="standard_card")
 )
 
@@ -149,13 +100,13 @@ Descr_R = dbc.Card(
 # # # # # # # F # # # # # # # # 
 Price_G = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_g", className="theheight_50p1")
+        dcc.Graph(figure=fig_G_pie, id="fig_g", className="theheight_50p1")
     ], className="standard_card")
 )
 
 Price_F = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_f", className="height_full")
+        dcc.Graph(figure=fig_f_scatter, id="fig_f", className="height_full")
     ], className="standard_card")
 )
 
@@ -168,15 +119,15 @@ Descr_G = dbc.Card(
 
 
 # # # # # # # H # # # # # # # # 
-Amen_H = dbc.Card(
-    dbc.CardBody([
-        dcc.Graph(figure=fig_H, className="height_full")
-    ], className="standard_card")
-)
+# Amen_H = dbc.Card(
+#     dbc.CardBody([
+#         dcc.Graph(figure=fig_H, className="height_full")
+#     ], className="standard_card")
+# )
 
 Amen_I = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_i", className="theheight_50p1")
+        dcc.Graph(figure=fig_I_pie, id="fig_i", className="theheight_50p1")
     ], className="standard_card")
 )
 
@@ -191,13 +142,13 @@ Descr_I = dbc.Card(
 # # # # # # # J # # # # # # # # 
 Sent_K = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_k", className="theheight_50p1")
+        dcc.Graph(figure=fig_K_pie, id="fig_k", className="theheight_50p1")
     ], className="standard_card")
 )
 
 Sent_J = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure={}, id="fig_j", className="height_full")
+        dcc.Graph(figure=fig_j_scatter, id="fig_j", className="height_full")
     ], className="standard_card")
 )
 
@@ -225,7 +176,7 @@ Awards_M = dbc.Card(
 
 Awards_N = dbc.Card(
     dbc.CardBody([
-        dcc.Graph(figure=fig_N, id="fig_n", className="height_50p")
+        dcc.Graph(figure=fig_N_pie, id="fig_n", className="height_50p")
     ], className="standard_card")
 )
 
@@ -283,7 +234,7 @@ content = dbc.Container(
             html.Div([
 
                 html.Div([
-                    dbc.Col(Amen_H)
+                    # dbc.Col(Amen_H)
                 ], className="threed_flex_baby"),
 
                 html.Div([

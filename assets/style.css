@@ -89,7 +89,7 @@
     box-shadow: 0 8px 16px 0 lightgray;
     align-items: center;
     height: 120px;
-    width: 800px;
+    width: 75vw;
 
     display: flex;
     justify-content: center;
@@ -116,17 +116,18 @@ h6 {
     margin-block-start: 10px;
     margin-block-end: 0;    
 }
- .number {
+.number {
+    height: 120px;
+    width: 170px;
     box-shadow: 0 1% 2% 0 lightgrey;
     transition: 0.3s;
     border-radius: 3px;
-    background-color: #BC2434;
-    color: white;
+    /* background-color: burlywood; */
+    color: black;
     box-shadow: 0 8px 16px 0 lightgray;
 
     padding: 10px 20px;
     margin: 0 0 20px 0;
-    width:100%;
 }
 
 .number:hover {

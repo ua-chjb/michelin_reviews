@@ -31,7 +31,7 @@ def fig_a_func(df, colors=c5_scale):
     with urlopen(geojson) as response:
         countries = json.load(response)
         
-    trace = go.Choroplethmap(geojson=geojson, 
+    trace = go.Choropleth(geojson=geojson, 
                             locations=gb["Alpha_3"], 
                             z=gb[("Award_ordinal", "mean")],
                             zmax = 5,
@@ -43,6 +43,8 @@ def fig_a_func(df, colors=c5_scale):
         "title": "map of the world, mean of Award_ordinal by country",
         "legend": {"title": "Award_ordinal"}
     })
+
+fig_a_geo = fig_a_func(michelin)
 
 #################### B ######################
 
@@ -66,9 +68,13 @@ def fig_b_func(df):
 
     return fig
 
+fig_b_scatter3d = fig_b_func(michelin) 
+
 ########### C, D, E, R ##############3
 def fig_r_func(df):
     return px.histogram(df, x="Award_ordinal", color_discrete_sequence=[c3]*10).update_layout({"title": "distribution of awards"})
+
+fig_r_hist = fig_r_func(michelin)
 
 ########### F ##############3
 
@@ -77,6 +83,8 @@ def fig_f_func(df):
                     opacity=0.05, 
                     size="Price", color="Price", color_continuous_scale=c5_scale, symbol_sequence=["diamond-open"],
                    ).update_layout({"title": "award by country and price"})
+
+fig_f_scatter = fig_f_func(michelin)
 
 
 ########### G, I, K, M, N ##############
@@ -91,90 +99,94 @@ def pie_g_i_k_m_n(gb, name, sort=False, textposition=None, title=None, legend_ti
     })
 
 # N chart
-fig_N = pie_g_i_k_m_n(pie_gb(michelin, "Award"), "Award", sort=False, textposition=None, title="awards, not filtered")
+fig_G_pie = pie_g_i_k_m_n(pie_gb(michelin, "Price"), "Price", sort=False, textposition=None, title="$ - $$$$")
+fig_I_pie = pie_g_i_k_m_n(pie_gb(michelin, "amenities_sum"), "amenities_sum", sort=False, textposition="inside", title="Extras")
+fig_K_pie = pie_g_i_k_m_n(pie_gb(michelin, "sentiment_cuts"), "sentiment_cuts", sort=False, textposition="inside", title="Text sentiment")
+# fig_M_pie = pie_g_i_k_m_n(pie_gb(michelin, "Award"), "Award", sort=False, textposition=None, title="Awards")
+fig_N_pie = pie_g_i_k_m_n(pie_gb(michelin, "Award"), "Award", sort=False, textposition=None, title="Awards")
 
 ########### H ##############
 
-def big_bar_percentage(df):
-    onehot_cols = [ 
-                "ac",	
-                "wheelchair", 
-                "parking", 
-                "garden",	
-                "wine",	
-                "terrace", 
-                "valet", 
-                "vegetarian", 
-                "counter", 
-                "view",
-                "noshoes", 
-                "cashonly", 
-                "sake"
-                ]
+# def big_bar_percentage(df):
+#     onehot_cols = [ 
+#                 "ac",	
+#                 "wheelchair", 
+#                 "parking", 
+#                 "garden",	
+#                 "wine",	
+#                 "terrace", 
+#                 "valet", 
+#                 "vegetarian", 
+#                 "counter", 
+#                 "view",
+#                 "noshoes", 
+#                 "cashonly", 
+#                 "sake"
+#                 ]
 
-    # define function for pivot of bar_percentage chart
-    def pivot_table_from_count(df1, x, y):
+#     # define function for pivot of bar_percentage chart
+#     def pivot_table_from_count(df1, x, y):
 
-        gb = df1.groupby([x, y]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :3]
-        pivot = gb.pivot(columns=x, index=y)
-        pivot.columns = pivot.columns.droplevel()
+#         gb = df1.groupby([x, y]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :3]
+#         pivot = gb.pivot(columns=x, index=y)
+#         pivot.columns = pivot.columns.droplevel()
         
-        pivot["sum"] = pivot.sum(axis=1)
+#         pivot["sum"] = pivot.sum(axis=1)
         
-        for col in pivot.columns:
-            for s in pivot.index:
-                pivot.loc[s, col] = (pivot.loc[s, col] / pivot.loc[s, "sum"])
+#         for col in pivot.columns:
+#             for s in pivot.index:
+#                 pivot.loc[s, col] = (pivot.loc[s, col] / pivot.loc[s, "sum"])
 
-        pivot.index = ["".join([y, str(0)]), y]
+#         pivot.index = ["".join([y, str(0)]), y]
         
-        return pivot.drop(["sum"], axis=1).drop("".join([y, str(0)]), axis=0)
+#         return pivot.drop(["sum"], axis=1).drop("".join([y, str(0)]), axis=0)
         
-    # combine data for of bar_percentage chart     
-    onehot_barchart_dict = {}
-    for onehot in onehot_cols:
-        try:
-            onehot_barchart_dict[onehot] = pivot_table_from_count(df, "Award", onehot)
-        except:
-            pass
+#     # combine data for of bar_percentage chart     
+#     onehot_barchart_dict = {}
+#     for onehot in onehot_cols:
+#         try:
+#             onehot_barchart_dict[onehot] = pivot_table_from_count(df, "Award", onehot)
+#         except:
+#             pass
 
-    onehot_big_df = pd.concat(onehot_barchart_dict.values())
-    onehot_big_df = onehot_big_df.T[::-1].T
+#     onehot_big_df = pd.concat(onehot_barchart_dict.values())
+#     onehot_big_df = onehot_big_df.T[::-1].T
 
-    onehot_big_df = onehot_big_df[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
-    x = "Award"
-    df = michelin # why is this here
+#     onehot_big_df = onehot_big_df[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
+#     x = "Award"
+#     df = michelin # why is this here
 
-    gb = michelin.groupby([x]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :2]
-    pivot = gb.set_index("Award").T
+#     gb = michelin.groupby([x]).count().reset_index().rename(columns={df.columns[0]: "count"}).iloc[::, :2]
+#     pivot = gb.set_index("Award").T
 
-    pivot["sum"] = pivot.sum(axis=1)
+#     pivot["sum"] = pivot.sum(axis=1)
 
-    # turn to percentage of data
-    for col in pivot.columns:
-        for s in pivot.index:
-            pivot.loc[s, col] = (pivot.loc[s, col] / pivot.loc[s, "sum"])
+#     # turn to percentage of data
+#     for col in pivot.columns:
+#         for s in pivot.index:
+#             pivot.loc[s, col] = (pivot.loc[s, col] / pivot.loc[s, "sum"])
 
-    pivot = pivot.T.rename(columns={"count": "average"}).T
+#     pivot = pivot.T.rename(columns={"count": "average"}).T
 
-    pivot = pivot.drop(["sum"], axis=1)
+#     pivot = pivot.drop(["sum"], axis=1)
 
-    pivot = pivot[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
+#     pivot = pivot[["Selected Restaurants", "Bib Gourmand", "1 Star", "2 Stars", "3 Stars"]]
 
-    # finalize full data in proper format, concatenated with "average" feature
-    onehot_big_pivot = pd.concat([onehot_big_df, pivot])
-    onehot_big_pivot = onehot_big_pivot.sort_values(by=["3 Stars"], ascending=True)
+#     # finalize full data in proper format, concatenated with "average" feature
+#     onehot_big_pivot = pd.concat([onehot_big_df, pivot])
+#     onehot_big_pivot = onehot_big_pivot.sort_values(by=["3 Stars"], ascending=True)
 
-    return onehot_big_pivot
+#     return onehot_big_pivot
 
-onehot_big_pivot = big_bar_percentage(michelin)
+# onehot_big_pivot = big_bar_percentage(michelin)
 
-def bar_percentage_from_pivot(pivot, title="percentage of each michelin award, by presence of amenities", x_title="awards", y_title="amenities", colors=c5_list):
-    return px.bar(pivot, x=pivot.columns, y=pivot.index, color_discrete_sequence=colors).update_layout({
-        "title": title, "xaxis": {"title": x_title}, "yaxis": {"title": y_title},
-        "legend" : {"visible": False}
-    })
+# def bar_percentage_from_pivot(pivot, title="percentage of each michelin award, by presence of amenities", x_title="awards", y_title="amenities", colors=c5_list):
+#     return px.bar(pivot, x=pivot.columns, y=pivot.index, color_discrete_sequence=colors).update_layout({
+#         "title": title, "xaxis": {"title": x_title}, "yaxis": {"title": y_title},
+#         "legend" : {"visible": False}
+#     })
 
-fig_H = bar_percentage_from_pivot(onehot_big_pivot)
+# fig_H = bar_percentage_from_pivot(onehot_big_pivot)
 
 
 ########### J ##############
@@ -191,6 +203,8 @@ def fig_j_func(df):
                            "showlegend": False, 
                            "coloraxis_showscale": False})
 
+
+fig_j_scatter = fig_j_func(michelin)
 
 ########### L ##############
 
